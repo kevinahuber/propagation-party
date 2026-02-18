@@ -1,0 +1,12 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Propagation Party//EN
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:20260321T170000
+DTEND;TZID=America/Chicago:20260321T220000
+SUMMARY:Propagation Party
+LOCATION:Inglewood, East Nashville, Tennessee
+DESCRIPTION:Plant propagation party! Bring your clippings and seedlings to swap.
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

@@ -5,30 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Propagation Party — RSVP</title>
   <meta name="description" content="You're invited to a plant propagation party! RSVP here.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2e6b34" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Propagation Party — March 21, 5–10 PM">
+  <meta property="og:description" content="A plant swap in Inglewood, East Nashville, Tennessee. Bring clippings and seedlings, leave with new plants. Drinks, grill, glow lights, good people.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://propagation.kevcreates.art">
+  <meta property="og:image" content="https://propagation.kevcreates.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Propagation Party event poster — Saturday, March 21, 5–10 PM, Inglewood, East Nashville, Tennessee">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Propagation Party — March 21, 5–10 PM">
+  <meta name="twitter:description" content="A plant swap in Inglewood, East Nashville, Tennessee. Bring clippings and seedlings, leave with new plants.">
+  <meta name="twitter:image" content="https://propagation.kevcreates.art/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 28V14' stroke='%232e6b34' stroke-width='2' stroke-linecap='round'/><path d='M16 18c-4-2-6-6-5-10 4 0 7 3 8 7' fill='%232e6b34'/><path d='M16 14c3-3 7-4 10-3-1 4-4 6-7 7' fill='%234a9e52'/></svg>">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script type="module" src="/src/main.js"></script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <header class="site-header">
-    <h1><span class="leaf" aria-hidden="true">🌱</span> Propagation Party</h1>
-    <p class="subtitle">You're invited to swap, snip, and grow!</p>
+    <h1>Propagation Party</h1>
+    <p class="tagline"><span class="tagline-word" data-emoji="✂️">Clip.</span> <span class="tagline-word" data-emoji="🌱">Sow.</span> <span class="tagline-word" data-emoji="🪴">Share.</span></p>
+    <p class="subtitle">March 21, 5 – 10 PM<br>Inglewood, East Nashville, Tennessee</p>
   </header>
 
   <main id="main" class="container">
-    <section class="party-details" aria-labelledby="details-heading">
-      <h2 id="details-heading">Party Details</h2>
-      <ul class="detail-list">
-        <li><span class="detail-label">Date:</span> Saturday, March 15, 2026</li>
-        <li><span class="detail-label">Time:</span> 2:00 PM – 5:00 PM</li>
-        <li><span class="detail-label">Location:</span> 123 Green Thumb Lane</li>
-        <li><span class="detail-label">What to bring:</span> A plant cutting or propagation to share, your favorite pot, and good vibes!</li>
-      </ul>
-    </section>
-
-    <section class="rsvp-section" aria-labelledby="rsvp-heading">
-      <h2 id="rsvp-heading">RSVP</h2>
+    <section class="rsvp-section" aria-label="RSVP form">
       <form class="rsvp-form" id="rsvp-form">
         <div class="form-group">
           <label for="name">Name</label>
@@ -37,7 +43,7 @@
 
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" required autocomplete="tel">
+          <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(555) 555-5555">
         </div>
 
         <fieldset class="rsvp-options">
@@ -60,57 +66,84 @@
 
         <div class="form-group">
           <label for="guests">Number of additional guests</label>
-          <input type="number" id="guests" name="additional_guests" min="0" value="0">
+          <div class="number-stepper">
+            <button type="button" class="stepper-btn stepper-decrement" aria-label="Decrease guests">&minus;</button>
+            <input type="number" id="guests" name="additional_guests" min="0" max="10" value="0" inputmode="numeric">
+            <button type="button" class="stepper-btn stepper-increment" aria-label="Increase guests">+</button>
+          </div>
+        </div>
+
+        <div class="form-group" id="notes-reveal" hidden>
+          <label for="initial-notes">Add a note <span class="notes-optional">(optional)</span></label>
+          <textarea id="initial-notes" name="notes" rows="3" placeholder="Dietary restrictions, questions, what you're bringing..."></textarea>
+        </div>
+
+        <div class="form-group hp-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
         </div>
 
         <button type="submit" class="submit-btn">Send RSVP</button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
       </form>
     </section>
-  </main>
 
-  <footer class="site-footer">
-    <p>Propagation Party 2026</p>
-  </footer>
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">FAQs</h2>
 
-  <script>
-    // TODO: Replace these with your Supabase project values
-    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+      <details>
+        <summary>What is this?</summary>
+        <p>Bring your plant clippings and extra seedlings, leave with new plants from others. Plus drinks, an open grill, light music, glow lights, and community.</p>
+      </details>
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      <details>
+        <summary>When and where?</summary>
+        <p>Saturday, March 21st, 5 &ndash; 10 PM in Inglewood, East Nashville, Tennessee. I'll send you the address after you RSVP. Late arrivals welcome &ndash; just check in with me after 10.</p>
+        <p>There's a quiet space available if you need a breather. The venue has steps &ndash; let me know if you have access needs.</p>
+      </details>
 
-    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const status = document.getElementById('form-status');
-      const submitBtn = form.querySelector('.submit-btn');
+      <details>
+        <summary>Who is this for?</summary>
+        <p>Everyone who likes plants! No experience or supplies required. Want to bring a friend? Give me a heads up and note it on the RSVP.</p>
+      </details>
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-      status.textContent = '';
-      status.className = 'form-status';
+      <details>
+        <summary>What should I bring?</summary>
+        <p>Seedlings and cuttings to share &ndash; please label them with the plant name and basic care tips. You're also welcome to bring full grown plants, seed banks, sharable foods (the grill will be on!), drinks, or whatever else &ndash; just be ready to share! If you bring food, label ingredients for folks with dietary restrictions.</p>
+        <p>I'll have temporary containers and soil on hand. Extra pots are always welcome too.</p>
+      </details>
 
-      const { error } = await supabase.from('rsvps').insert({
-        name: form.name.value.trim(),
-        phone: form.phone.value.trim(),
-        rsvp: form.rsvp.value,
-        additional_guests: parseInt(form.additional_guests.value, 10) || 0,
-      });
+      <details>
+        <summary>What should I not bring?</summary>
+        <p><strong>Pests.</strong> Wash your plants.</p>
+        <p><strong>Parent plants.</strong> Don't bring a plant that you don't intend to share all of.</p>
+        <p><strong>Pets.</strong> Berry, Melon, Blu, and Regina will be holding court and we'd like to protect the plants.</p>
+      </details>
 
-      if (error) {
-        status.textContent = 'Something went wrong. Please try again.';
-        status.className = 'form-status form-status--error';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send RSVP';
-      } else {
-        form.reset();
-        status.textContent = 'Thanks for your RSVP!';
-        status.className = 'form-status form-status--success';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send RSVP';
-      }
-    });
-  </script>
-</body>
+      <details>
+        <summary>Why so long?</summary>
+        <p>Folks can drop by anytime during this. Starting earlier gives us some daylight and supports folks that have evening plans. This will go into the night though, it is in fact a party!</p>
+      </details>
+
+      <details>
+        <summary>Any ground rules?</summary>
+        <p>No selling &ndash; this is a market based on abundance, kindness, and multiplicative growth. Some attendees have plant-related businesses, so take the chance to learn about and support each other.</p>
+        <p>Be kind. Ask before photographing people you don't know. Use the names, pronouns, and words people ask you to use. If you feel unsafe, reach out to me ASAP.</p>
+      </details>
+
+      <details>
+        <summary>Health &amp; allergies?</summary>
+        <p>Please stay home if you're feeling sick. I have two cats, Melon and Blu &ndash; allergens included, unfortunately.</p>
+      </details>
+
+      <details>
+        <summary>Other questions?</summary>
+        <p>Drop a note on your RSVP or ask me directly! I'll add to this page if it helps others.</p>
+      </details>
+    </section>
+    <section class="gallery" id="gallery-section" aria-labelledby="gallery-heading" hidden>
+      <h2 id="gallery-heading">Guest drawings</h2>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+  </main></body>
 </html>
