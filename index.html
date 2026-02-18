@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagation Party — RSVP</title>
+  <meta name="description" content="You're invited to a plant propagation party! RSVP here.">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="site-header">
+    <h1><span class="leaf" aria-hidden="true">🌱</span> Propagation Party</h1>
+    <p class="subtitle">You're invited to swap, snip, and grow!</p>
+  </header>
+
+  <main id="main" class="container">
+    <section class="party-details" aria-labelledby="details-heading">
+      <h2 id="details-heading">Party Details</h2>
+      <ul class="detail-list">
+        <li><span class="detail-label">Date:</span> Saturday, March 15, 2026</li>
+        <li><span class="detail-label">Time:</span> 2:00 PM – 5:00 PM</li>
+        <li><span class="detail-label">Location:</span> 123 Green Thumb Lane</li>
+        <li><span class="detail-label">What to bring:</span> A plant cutting or propagation to share, your favorite pot, and good vibes!</li>
+      </ul>
+    </section>
+
+    <section class="rsvp-section" aria-labelledby="rsvp-heading">
+      <h2 id="rsvp-heading">RSVP</h2>
+      <form class="rsvp-form" id="rsvp-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required autocomplete="tel">
+        </div>
+
+        <fieldset class="rsvp-options">
+          <legend>Will you be there?</legend>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="rsvp-yes" name="rsvp" value="Yes" required>
+              <label for="rsvp-yes">Yes!</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="rsvp-no" name="rsvp" value="No">
+              <label for="rsvp-no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="rsvp-maybe" name="rsvp" value="Maybe">
+              <label for="rsvp-maybe">Maybe</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-group">
+          <label for="guests">Number of additional guests</label>
+          <input type="number" id="guests" name="additional_guests" min="0" value="0">
+        </div>
+
+        <button type="submit" class="submit-btn">Send RSVP</button>
+        <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Propagation Party 2026</p>
+  </footer>
+
+  <script>
+    // TODO: Replace these with your Supabase project values
+    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const status = document.getElementById('form-status');
+      const submitBtn = form.querySelector('.submit-btn');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      status.textContent = '';
+      status.className = 'form-status';
+
+      const { error } = await supabase.from('rsvps').insert({
+        name: form.name.value.trim(),
+        phone: form.phone.value.trim(),
+        rsvp: form.rsvp.value,
+        additional_guests: parseInt(form.additional_guests.value, 10) || 0,
+      });
+
+      if (error) {
+        status.textContent = 'Something went wrong. Please try again.';
+        status.className = 'form-status form-status--error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send RSVP';
+      } else {
+        form.reset();
+        status.textContent = 'Thanks for your RSVP!';
+        status.className = 'form-status form-status--success';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send RSVP';
+      }
+    });
+  </script>
+</body>
+</html>
