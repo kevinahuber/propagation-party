@@ -37,35 +37,61 @@ export function initCursors() {
       ctx.fillText('🌱', 20, 50);
       hx = 32; hy = 50;
     } else {
-      // 🪴 Share — bundle of cuttings, cursor tip is itself a cutting
+      // 🪴 Share — bouquet of plant cuttings, hotspot at bundle base
+      canvas.width = 72;
+      canvas.height = 72;
+
+      const bx = 36, by = 62; // bundle base / hotspot
+
+      // Each stem: tip x/y, stem color, leaf color, leaf side (+1 right, -1 left), leaf position along stem
+      const stems = [
+        { tx: 36, ty:  4, sc: '#1a3a1a', lc: '#2e6b34', ls:  1, lp: 0.42 },
+        { tx: 20, ty:  8, sc: '#2e6b34', lc: '#4a8c3f', ls: -1, lp: 0.45 },
+        { tx: 52, ty:  8, sc: '#3d6b32', lc: '#5a8c3f', ls:  1, lp: 0.45 },
+        { tx:  8, ty: 22, sc: '#4a7c3f', lc: '#8ab55a', ls: -1, lp: 0.48 },
+        { tx: 64, ty: 22, sc: '#2d5a27', lc: '#6b9e45', ls:  1, lp: 0.48 },
+      ];
+
+      stems.forEach(({ tx, ty, sc, lc, ls, lp }) => {
+        const dx = tx - bx, dy = ty - by;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        // perpendicular unit vector for leaf direction
+        const px = -dy / len * ls, py = dx / len * ls;
+        // leaf base point along stem
+        const lx = bx + dx * lp, ly = by + dy * lp;
+
+        // Stem (slightly curved via quadratic)
+        ctx.save();
+        ctx.strokeStyle = sc;
+        ctx.lineWidth = 1.8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(bx, by);
+        ctx.quadraticCurveTo(bx + dx * 0.5 + px * 4, by + dy * 0.5 + py * 4, tx, ty);
+        ctx.stroke();
+
+        // Leaf
+        ctx.fillStyle = lc;
+        ctx.beginPath();
+        ctx.moveTo(lx, ly);
+        ctx.quadraticCurveTo(lx + px * 11 + dx / len * 4, ly + py * 11 + dy / len * 4, lx + dx / len * 10, ly + dy / len * 10);
+        ctx.quadraticCurveTo(lx + px * 5, ly + py * 5, lx, ly);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Twine binding
       ctx.save();
-      ctx.strokeStyle = '#4a7c3f'; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(18, 22); ctx.stroke();
-      ctx.fillStyle = '#2d5a27';
-      ctx.beginPath(); ctx.moveTo(8, 10); ctx.bezierCurveTo(0, 8, -2, 2, 2, 0);
-      ctx.bezierCurveTo(8, 4, 10, 8, 8, 10); ctx.fill();
+      ctx.strokeStyle = '#8b6914';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(bx - 7, by - 6);
+      ctx.bezierCurveTo(bx - 5, by - 10, bx + 5, by - 10, bx + 7, by - 6);
+      ctx.stroke();
       ctx.restore();
-      ctx.save();
-      ctx.strokeStyle = '#5a8c3f'; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(28, 4); ctx.lineTo(42, 24); ctx.stroke();
-      ctx.fillStyle = '#8ab55a';
-      ctx.beginPath(); ctx.moveTo(34, 12); ctx.bezierCurveTo(28, 8, 28, 2, 32, 2);
-      ctx.bezierCurveTo(38, 4, 36, 10, 34, 12); ctx.fill();
-      ctx.restore();
-      ctx.save();
-      ctx.strokeStyle = '#3d6b32'; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(14, 32); ctx.lineTo(44, 34); ctx.stroke();
-      ctx.fillStyle = '#4a7c3f';
-      ctx.beginPath(); ctx.moveTo(22, 28); ctx.bezierCurveTo(18, 22, 22, 18, 26, 20);
-      ctx.bezierCurveTo(28, 26, 24, 30, 22, 28); ctx.fill();
-      ctx.restore();
-      ctx.save();
-      ctx.strokeStyle = '#5c3a1a'; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(36, 38); ctx.lineTo(52, 52); ctx.stroke();
-      ctx.fillStyle = '#7a4a28';
-      ctx.beginPath(); ctx.ellipse(40, 42, 4, 2.5, 0.8, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-      hx = 0; hy = 0;
+
+      hx = bx; hy = by;
     }
 
     const url = `url(${canvas.toDataURL()}) ${hx} ${hy}, pointer`;
