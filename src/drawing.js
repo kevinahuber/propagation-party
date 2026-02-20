@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js';
 import { randomPalette } from './colors.js';
+import { refreshGallery } from './gallery.js';
 
 export function createDrawingSection() {
   let rsvpDrawing;
@@ -119,6 +120,7 @@ export function createDrawingSection() {
         saveDrawBtn.disabled = false;
         saveDrawBtn.textContent = 'Saved!';
         setTimeout(() => { saveDrawBtn.textContent = 'Update drawing'; }, 2000);
+        refreshGallery();
       }
     } catch (err) {
       drawStatus.textContent = 'Failed to save. Try again.';
