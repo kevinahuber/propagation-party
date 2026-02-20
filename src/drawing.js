@@ -3,9 +3,6 @@ import { randomPalette } from './colors.js';
 import { refreshGallery } from './gallery.js';
 
 export function createDrawingSection() {
-  let rsvpDrawing;
-  try { rsvpDrawing = JSON.parse(sessionStorage.getItem('rsvp')).drawing; } catch (e) {}
-
   const drawSection = document.createElement('div');
   drawSection.className = 'draw-section';
 
@@ -28,12 +25,6 @@ export function createDrawingSection() {
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.lineWidth = 3;
-
-  if (rsvpDrawing) {
-    const img = new Image();
-    img.onload = () => ctx.drawImage(img, 0, 0);
-    img.src = rsvpDrawing;
-  }
 
   const palette = document.createElement('div');
   palette.className = 'draw-palette';
@@ -75,7 +66,7 @@ export function createDrawingSection() {
   const saveDrawBtn = document.createElement('button');
   saveDrawBtn.type = 'button';
   saveDrawBtn.className = 'notes-btn';
-  saveDrawBtn.textContent = rsvpDrawing ? 'Update drawing' : 'Save drawing';
+  saveDrawBtn.textContent = 'Post it';
   drawControls.appendChild(saveDrawBtn);
 
   const drawStatus = document.createElement('p');
@@ -87,39 +78,25 @@ export function createDrawingSection() {
   drawSection.appendChild(drawControls);
 
   // Save handler
-  let drawingId;
-  try { drawingId = JSON.parse(sessionStorage.getItem('rsvp')).drawingId; } catch (e) {}
-
   saveDrawBtn.addEventListener('click', async () => {
     const dataUrl = canvas.toDataURL('image/png');
     saveDrawBtn.disabled = true;
-    saveDrawBtn.textContent = 'Saving...';
+    saveDrawBtn.textContent = 'Posting...';
     drawStatus.textContent = '';
     drawStatus.className = 'form-status';
     try {
-      let result;
-      if (drawingId) {
-        result = await supabase.from('drawings').update({ drawing: dataUrl }).eq('id', drawingId);
-      } else {
-        const newId = crypto.randomUUID();
-        result = await supabase.from('drawings').insert({ id: newId, drawing: dataUrl });
-        if (!result.error) drawingId = newId;
-      }
+      const result = await supabase.from('drawings').insert({ id: crypto.randomUUID(), drawing: dataUrl });
       if (result.error) {
         drawStatus.textContent = 'Failed: ' + (result.error.message || JSON.stringify(result.error));
         drawStatus.className = 'form-status form-status--error';
         saveDrawBtn.disabled = false;
-        saveDrawBtn.textContent = 'Save drawing';
+        saveDrawBtn.textContent = 'Post it';
       } else {
-        try {
-          const saved = JSON.parse(sessionStorage.getItem('rsvp'));
-          saved.drawing = dataUrl;
-          saved.drawingId = drawingId;
-          sessionStorage.setItem('rsvp', JSON.stringify(saved));
-        } catch (e) {}
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         saveDrawBtn.disabled = false;
-        saveDrawBtn.textContent = 'Saved!';
-        setTimeout(() => { saveDrawBtn.textContent = 'Update drawing'; }, 2000);
+        saveDrawBtn.textContent = 'Posted!';
+        setTimeout(() => { saveDrawBtn.textContent = 'Post it'; }, 2000);
         refreshGallery();
       }
     } catch (err) {
