@@ -84,7 +84,7 @@ a {
 }
 
 .site-header h1 {
-  font-family: Papyrus, fantasy;
+  font-family: 'Uncial Antiqua', Papyrus, fantasy;
   font-size: 3.5rem;
   font-weight: 900;
   -webkit-text-stroke: 1.5px currentColor;
