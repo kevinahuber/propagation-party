@@ -437,33 +437,6 @@ a {
   border-bottom-color: var(--text);
 }
 
-/* Notes form */
-.notes-form {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.update-legend {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0;
-}
-
-.notes-form label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  cursor: var(--cursor-plant) 16 28, auto;
-}
-
-.notes-form textarea,
 .rsvp-form textarea {
   font-family: inherit;
   font-size: 0.875rem;
@@ -479,13 +452,11 @@ a {
   width: 100%;
 }
 
-.notes-form textarea:focus,
 .rsvp-form textarea:focus {
   border-color: var(--accent);
   box-shadow: 3px 3px 0 var(--accent);
 }
 
-.notes-form textarea:focus:not(:focus-visible),
 .rsvp-form textarea:focus:not(:focus-visible) {
   outline: none;
 }
@@ -703,6 +674,14 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin: 0 0 1rem;
+}
+
+.gallery h2 small {
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-secondary);
 }
 
 .gallery-grid {

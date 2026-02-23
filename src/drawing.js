@@ -103,7 +103,7 @@ export function createDrawingSection() {
       drawStatus.textContent = 'Failed to save. Try again.';
       drawStatus.className = 'form-status form-status--error';
       saveDrawBtn.disabled = false;
-      saveDrawBtn.textContent = 'Save drawing';
+      saveDrawBtn.textContent = 'Post it';
     }
   });
 

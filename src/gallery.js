@@ -19,11 +19,27 @@ async function fetchAndRender() {
     shownIds.add(row.id);
     const img = document.createElement('img');
     img.src = row.drawing;
-    img.alt = '';
-    img.setAttribute('aria-hidden', 'true');
+    img.alt = 'Guest drawing';
     img.className = 'gallery-img';
     img.loading = 'lazy';
-    grid.appendChild(img);
+
+    const link = document.createElement('a');
+    link.href = row.drawing;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.setAttribute('aria-label', 'Open drawing in new tab');
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      fetch(row.drawing)
+        .then(r => r.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const tab = window.open(url, '_blank');
+          tab?.addEventListener('pagehide', () => URL.revokeObjectURL(url));
+        });
+    });
+    link.appendChild(img);
+    grid.appendChild(link);
     added++;
   });
 
