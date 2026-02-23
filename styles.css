@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Uncial Antiqua';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/uncial-antiqua.woff2') format('woff2');
+}
+
 :root {
   --accent: #e91e8c;
   --accent-hover: #c4177a;
