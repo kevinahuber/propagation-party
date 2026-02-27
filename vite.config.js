@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         thanks: 'thanks.html',
+        qr: 'qr.html',
       },
     },
   },

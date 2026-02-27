@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propagation Party — QR Code</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root {
+      color-scheme: light;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      /* Use display-p3 white on HDR-capable displays for peak brightness */
+      background: color(display-p3 1 1 1);
+      /* Fallback for non-P3 displays */
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      color: #000;
+      cursor: default;
+      user-select: none;
+    }
+
+    @supports (background: color(display-p3 1 1 1)) {
+      body {
+        background: color(display-p3 1 1 1);
+      }
+    }
+
+    #qr-canvas {
+      display: block;
+      /* Hard pixel boundary — no anti-aliasing blur on the QR modules */
+      image-rendering: pixelated;
+      max-width: min(90vw, 90vh);
+      max-height: min(90vw, 90vh);
+    }
+
+    #url-label {
+      font-size: clamp(0.75rem, 2vw, 1rem);
+      color: #000;
+      opacity: 0.5;
+      text-align: center;
+    }
+
+    #tap-hint {
+      position: fixed;
+      bottom: 1rem;
+      font-size: 0.7rem;
+      color: #000;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="qr-canvas" aria-label="QR code for the Propagation Party site"></canvas>
+  <p id="url-label"></p>
+  <p id="tap-hint">tap for fullscreen</p>
+  <script type="module" src="/src/qr.js"></script>
+</body>
+</html>
