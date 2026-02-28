@@ -3,63 +3,75 @@ import QRCode from 'qrcode';
 const url = window.location.origin;
 const canvas = document.getElementById('qr-canvas');
 const label = document.getElementById('url-label');
-const hint = document.getElementById('tap-hint');
+const btn = document.getElementById('fullscreen-btn');
 
-// Size the QR code to fill the smaller viewport dimension
-const size = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.85);
+// Size the QR to fill available space without crowding the tagline/plants.
+const isMobile = window.innerWidth <= 640;
+const reservedV = isMobile ? 200 : 160;
+const size = Math.floor(
+  Math.min(window.innerWidth * 0.88, window.innerHeight - reservedV)
+);
 
+// Render at device pixel ratio for retina sharpness, scale back via CSS.
+const dpr = Math.min(window.devicePixelRatio || 1, 3);
 QRCode.toCanvas(canvas, url, {
-  width: size,
-  margin: 2,
+  width: size * dpr,
+  margin: 4,                 // full 4-module quiet zone per QR spec
   errorCorrectionLevel: 'M',
   color: {
     dark: '#000000',
     light: '#ffffff',
   },
 });
+canvas.style.width = size + 'px';
+canvas.style.height = size + 'px';
 
 label.textContent = url.replace(/^https?:\/\//, '');
 
-// Keep screen on via Wake Lock API
+// ── Wake lock: keep screen on ──────────────────────────────────────────────
 async function requestWakeLock() {
   if ('wakeLock' in navigator) {
     try {
       await navigator.wakeLock.request('screen');
-    } catch {
-      // Silently ignore — not supported or permission denied
-    }
+    } catch { /* permission denied or not supported */ }
   }
 }
 
-// Re-acquire wake lock if page becomes visible again (e.g. after tab switch)
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    requestWakeLock();
-  }
+  if (document.visibilityState === 'visible') requestWakeLock();
 });
 
 requestWakeLock();
 
-// Fullscreen on tap/click (requires user gesture)
+// ── Fullscreen toggle ──────────────────────────────────────────────────────
 async function toggleFullscreen() {
   if (!document.fullscreenElement) {
     try {
       await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
-      hint.style.display = 'none';
-    } catch {
-      // Not supported or denied
-    }
+      btn.setAttribute('aria-pressed', 'true');
+      btn.textContent = 'Exit fullscreen';
+    } catch { /* not supported */ }
   } else {
     try {
       await document.exitFullscreen();
-      hint.style.display = '';
-    } catch {
-      // Ignore
-    }
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = 'Tap or press Enter for fullscreen';
+    } catch { /* ignore */ }
   }
 }
 
-document.body.addEventListener('click', toggleFullscreen);
-document.body.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') toggleFullscreen();
+// Button is the canonical trigger (keyboard + pointer).
+btn.addEventListener('click', toggleFullscreen);
+
+// "Tap anywhere" convenience for pointer users — skip the button to avoid
+// double-firing, which would immediately re-toggle fullscreen.
+document.body.addEventListener('click', (e) => {
+  if (!e.target.closest('#fullscreen-btn')) toggleFullscreen();
+});
+
+// Sync aria-pressed if the user exits fullscreen via Escape or browser UI.
+document.addEventListener('fullscreenchange', () => {
+  const inFS = !!document.fullscreenElement;
+  btn.setAttribute('aria-pressed', String(inFS));
+  btn.textContent = inFS ? 'Exit fullscreen' : 'Tap or press Enter for fullscreen';
 });

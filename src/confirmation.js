@@ -1,4 +1,5 @@
 import { createDrawingSection } from './drawing.js';
+import { event } from '../event.config.js';
 
 export function showConfirmation(section, rsvpName, rsvpPhone, rsvpResponse, rsvpGuests, rsvpNotes) {
   section.textContent = '';
@@ -14,7 +15,7 @@ export function showConfirmation(section, rsvpName, rsvpPhone, rsvpResponse, rsv
   nav.setAttribute('aria-label', 'Add to calendar');
 
   const gcal = document.createElement('a');
-  gcal.href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Propagation%20Party&dates=20260321T170000/20260321T220000&ctz=America/Chicago&location=Inglewood%2C%20East%20Nashville%2C%20Tennessee&details=Plant%20propagation%20party!%20Bring%20your%20clippings%20and%20seedlings%20to%20swap.';
+  gcal.href = event.googleCalUrl;
   gcal.className = 'cal-link';
   gcal.target = '_blank';
   gcal.rel = 'noopener noreferrer';

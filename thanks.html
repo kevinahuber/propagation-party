@@ -3,15 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thanks! — Propagation Party</title>
-  <meta name="description" content="Thanks for RSVPing to the Propagation Party!">
+  <title>Thanks! — {{EVENT_NAME}}</title>
+  <meta name="description" content="{{EVENT_THANKS_DESC}}">
+  <meta name="author" content="Kevin Huber">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#2e6b34" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-  <meta property="og:title" content="Propagation Party">
-  <meta property="og:description" content="Thanks for your RSVP to the Propagation Party!">
+  <meta property="og:title" content="Thanks! — {{EVENT_NAME}}">
+  <meta property="og:description" content="{{EVENT_THANKS_DESC}}">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://propagation.kevcreates.art/thanks">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="{{EVENT_URL}}/thanks">
+  <meta property="og:image" content="{{EVENT_OG_IMAGE}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{EVENT_OG_IMAGE_ALT}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Thanks! — {{EVENT_NAME}}">
+  <meta name="twitter:description" content="{{EVENT_THANKS_DESC}}">
+  <meta name="twitter:image" content="{{EVENT_OG_IMAGE}}">
+  <meta name="twitter:image:alt" content="{{EVENT_OG_IMAGE_ALT}}">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 28V14' stroke='%232e6b34' stroke-width='2' stroke-linecap='round'/><path d='M16 18c-4-2-6-6-5-10 4 0 7 3 8 7' fill='%232e6b34'/><path d='M16 14c3-3 7-4 10-3-1 4-4 6-7 7' fill='%234a9e52'/></svg>">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,9 +30,9 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <header class="site-header">
-    <h1>Propagation Party</h1>
+    <h1>{{EVENT_NAME}}</h1>
     <p class="tagline"><span class="tagline-word" data-emoji="✂️">Clip.</span> <span class="tagline-word" data-emoji="🌱">Sow.</span> <span class="tagline-word" data-emoji="🪴">Share.</span></p>
-    <p class="subtitle">March 21, 5 – 10 PM<br>Inglewood, East Nashville, Tennessee</p>
+    <p class="subtitle">{{EVENT_DATE}}, {{EVENT_TIME}}<br>{{EVENT_LOCATION}}</p>
   </header>
 
   <main id="main" class="container">
@@ -29,7 +40,7 @@
       <h2 id="thanks-heading" class="thank-you">Thanks for your RSVP!</h2>
       <p>I got your response. See you at the party!</p>
       <nav class="cal-links" aria-label="Add to calendar">
-        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Propagation%20Party&dates=20260321T170000/20260321T220000&ctz=America/Chicago&location=Inglewood%2C%20East%20Nashville%2C%20Tennessee&details=Plant%20propagation%20party!%20Bring%20your%20clippings%20and%20seedlings%20to%20swap." class="cal-link" target="_blank" rel="noopener">Google Calendar</a>
+        <a href="{{EVENT_GOOGLE_CAL_URL}}" class="cal-link" target="_blank" rel="noopener">Google Calendar</a>
         <a href="/event.ics" class="cal-link" download>Apple / Outlook</a>
       </nav>
       <p><a href="/">Back to party details</a></p>
