@@ -9,7 +9,7 @@ try {
   if (saved) {
     const data = JSON.parse(saved);
     const section = document.querySelector('.rsvp-section');
-    if (section) showConfirmation(section, data.name, data.phone, data.rsvp, data.guests, data.notes);
+    if (section) showConfirmation(section, data.name, null, data.rsvp, data.guests, data.notes);
   }
 } catch (e) {}
 

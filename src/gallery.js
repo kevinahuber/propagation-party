@@ -16,6 +16,7 @@ async function fetchAndRender() {
   let added = 0;
   data.forEach(row => {
     if (shownIds.has(row.id)) return;
+    if (!row.drawing?.startsWith('data:image/')) return; // reject non-image data URLs
     shownIds.add(row.id);
     const img = document.createElement('img');
     img.src = row.drawing;

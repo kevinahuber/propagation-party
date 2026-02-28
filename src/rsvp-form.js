@@ -104,7 +104,7 @@ export function initForm() {
     } else {
       try {
         sessionStorage.setItem('rsvp', JSON.stringify({
-          name: rsvpName, phone: rsvpPhone, rsvp: rsvpResponse, guests: rsvpGuests, notes: rsvpNotes,
+          name: rsvpName, rsvp: rsvpResponse, guests: rsvpGuests, notes: rsvpNotes,
         }));
       } catch (e) {}
       const section = document.querySelector('.rsvp-section');
