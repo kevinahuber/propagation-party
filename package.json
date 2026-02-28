@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && npm run og",
     "preview": "vite preview",
-    "og": "sh -c '\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --screenshot=\"$PWD/public/og-image.png\" --window-size=1200,630 --default-background-color=fffdf5 \"$PWD/og-image.svg\" 2>/dev/null && echo og-image.png updated'"
+    "og": "sh scripts/generate-og.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
