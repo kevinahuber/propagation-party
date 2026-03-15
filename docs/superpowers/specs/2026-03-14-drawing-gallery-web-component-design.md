@@ -23,9 +23,13 @@ A light DOM custom element (`HTMLElement` subclass) that:
 
 ### Rendering (light DOM)
 
-The component uses `this.innerHTML` to render its template — no shadow root. This means existing CSS selectors in `styles.css` (`.gallery`, `.gallery-grid`, `.gallery-img`, `.gallery-loader`, etc.) continue to work without changes.
+The component uses `this.innerHTML` to render its template — no shadow root. The component applies `class="gallery"` to its host element so existing CSS selectors in `styles.css` (`.gallery`, `.gallery-grid`, `.gallery-img`, `.gallery-loader`, etc.) continue to work without changes.
 
-The component sets `this.hidden = true` initially and manages its own visibility based on fetch results.
+The template renders a `<section>` wrapper internally to preserve semantic HTML structure, with `aria-labelledby="gallery-heading"` pointing to the `<h2>` inside.
+
+The `<drawing-gallery>` tag in `index.html` should include `hidden` to prevent a flash of empty content before the custom element is registered. The component manages its own `hidden` attribute from `connectedCallback` onward.
+
+`connectedCallback` guards against re-initialization (e.g. if the element is moved in the DOM) by checking an internal `_initialized` flag.
 
 ### Public API
 
@@ -33,7 +37,7 @@ The component sets `this.hidden = true` initially and manages its own visibility
 
 ### Integration changes
 
-- **`index.html`**: Replace the `<section class="gallery" ...>...</section>` block with `<drawing-gallery></drawing-gallery>`
+- **`index.html`**: Replace the `<section class="gallery" ...>...</section>` block with `<drawing-gallery hidden></drawing-gallery>`
 - **`gallery.js`**: Rewrite to define the `DrawingGallery` custom element class and register it via `customElements.define('drawing-gallery', DrawingGallery)`. Export `refreshGallery` as a function that finds the element and calls `.refresh()`.
 - **`main.js`**: Remove the `loadGallery` import and `loadGallery()` call. The component self-initializes via `connectedCallback`.
 - **`styles.css`**: No changes needed. Existing `.gallery` class is applied by the component to its host element.
@@ -45,6 +49,8 @@ The component sets `this.hidden = true` initially and manages its own visibility
 - If drawings exist: shows the grid
 - If no drawings on first load: hides the entire component
 - On subsequent refreshes (via `refresh()`): no loader shown, just appends new drawings
+- On fetch error: behave the same as "no drawings" — hide the component on first load, no-op on refresh
+- If `refresh()` returns only already-seen drawings: no-op (deduplication via `shownIds`)
 
 ### Drawing rendering
 
@@ -67,4 +73,5 @@ Each drawing is rendered as an `<a>` wrapping an `<img>`, same as current behavi
 
 - Shadow DOM / style encapsulation
 - Individual `<gallery-image>` child components
-- Changes to the drawing submission flow (`drawing.js`) beyond updating the `refreshGallery` import
+- Changes to `drawing.js` (no changes required — existing `import { refreshGallery }` continues to work)
+- `disconnectedCallback` cleanup / AbortController for in-flight fetches
