@@ -1,6 +1,6 @@
 import { showConfirmation } from './confirmation.js';
 import { initForm } from './rsvp-form.js';
-import { loadGallery } from './gallery.js';
+import './gallery.js';
 import { initCursors } from './cursors.js';
 
 // Restore confirmation if already submitted this session
@@ -14,5 +14,4 @@ try {
 } catch (e) {}
 
 initForm();
-loadGallery();
 initCursors();

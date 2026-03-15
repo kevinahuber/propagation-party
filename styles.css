@@ -705,6 +705,114 @@ a {
   display: block;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.gallery-loader {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.gallery-loader-svg {
+  animation: loaderPlantFade 3.5s ease-in-out infinite;
+}
+
+.loader-stem {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: loaderStemGrow 3.5s ease-out infinite;
+}
+
+.loader-leaf-l {
+  transform-origin: 40px 50px;
+  animation: loaderLeafGrow1 3.5s ease-out infinite;
+}
+
+.loader-leaf-r {
+  transform-origin: 40px 42px;
+  animation: loaderLeafGrow2 3.5s ease-out infinite;
+}
+
+.loader-root-tap {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: loaderRootGrow1 3.5s ease-out infinite;
+}
+
+.loader-root-l,
+.loader-root-r {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: loaderRootGrow2 3.5s ease-out infinite;
+}
+
+.loader-root-il,
+.loader-root-ir {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: loaderRootGrow3 3.5s ease-out infinite;
+}
+
+@keyframes loaderPlantFade {
+  0%, 85% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+@keyframes loaderStemGrow {
+  0% { stroke-dashoffset: 40; }
+  30%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes loaderLeafGrow1 {
+  0%, 15% { transform: scale(0); opacity: 0; }
+  35%, 100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes loaderLeafGrow2 {
+  0%, 25% { transform: scale(0); opacity: 0; }
+  45%, 100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes loaderRootGrow1 {
+  0%, 20% { stroke-dashoffset: 1; }
+  60%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes loaderRootGrow2 {
+  0%, 30% { stroke-dashoffset: 1; }
+  70%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes loaderRootGrow3 {
+  0%, 40% { stroke-dashoffset: 1; }
+  80%, 100% { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-loader-svg,
+  .gallery-loader-svg * {
+    animation: none !important;
+  }
+  .loader-stem { stroke-dashoffset: 0; }
+  .loader-leaf-l,
+  .loader-leaf-r { opacity: 1; transform: scale(1); }
+  .loader-root-tap,
+  .loader-root-l,
+  .loader-root-r,
+  .loader-root-il,
+  .loader-root-ir { stroke-dashoffset: 0; }
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .site-header {
