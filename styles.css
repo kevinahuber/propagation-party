@@ -718,9 +718,12 @@ a {
 }
 
 .gallery-loader {
-  display: flex;
   justify-content: center;
   padding: 2rem 0;
+}
+
+.gallery-loader:not([hidden]) {
+  display: flex;
 }
 
 .gallery-loader-svg {
