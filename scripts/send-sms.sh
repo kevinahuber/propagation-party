@@ -2,13 +2,14 @@
 set -euo pipefail
 
 SUPABASE_URL="https://inlrdvzbrglgzxxtfnxj.supabase.co"
-SUPABASE_KEY="sb_publishable_konF4GKC61WiFVbHzy0NyQ_9Kc017cn"
+SUPABASE_KEY="${SUPABASE_SERVICE_KEY:?Error: SUPABASE_SERVICE_KEY environment variable is required. Find it in your Supabase dashboard under Settings > API.}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MESSAGE_FILE="${SCRIPT_DIR}/sms-message.txt"
 FILTER="all"
+TEST_MODE=false
 
 usage() {
-  echo "Usage: $0 [--filter yes|no|maybe|all] [--message-file path]"
+  echo "Usage: $0 [--filter yes|no|maybe|all] [--message-file path] [--test]"
   echo ""
   echo "Sends personalized SMS messages via ADB to RSVPs from Supabase."
   echo "Message template should contain {name} as placeholder."
@@ -16,6 +17,7 @@ usage() {
   echo "Options:"
   echo "  --filter        Filter by RSVP status (default: all)"
   echo "  --message-file  Path to message template (default: scripts/sms-message.txt)"
+  echo "  --test          Send a test message to yourself"
   exit 1
 }
 
@@ -23,6 +25,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --filter) FILTER="$2"; shift 2 ;;
     --message-file) MESSAGE_FILE="$2"; shift 2 ;;
+    --test) TEST_MODE=true; shift ;;
     -h|--help) usage ;;
     *) echo "Unknown option: $1"; usage ;;
   esac
@@ -47,20 +50,26 @@ if ! adb devices | grep -q "device$"; then
   exit 1
 fi
 
-echo "Fetching RSVPs from Supabase (filter: $FILTER)..."
-
-if [[ "$FILTER" == "all" ]]; then
-  QUERY="select=name,phone"
+if [[ "$TEST_MODE" == true ]]; then
+  echo "Test mode: sending to Kevin at (513) 728-1883"
+  RESPONSE='[{"name":"Kevin","phone":"(513) 728-1883"}]'
+  COUNT=1
 else
-  QUERY="select=name,phone&rsvp=eq.${FILTER}"
+  echo "Fetching RSVPs from Supabase (filter: $FILTER)..."
+
+  if [[ "$FILTER" == "all" ]]; then
+    QUERY="select=name,phone,rsvp"
+  else
+    QUERY="select=name,phone,rsvp&rsvp=eq.${FILTER}"
+  fi
+
+  RESPONSE=$(curl -s \
+    "${SUPABASE_URL}/rest/v1/rsvps?${QUERY}" \
+    -H "apikey: ${SUPABASE_KEY}" \
+    -H "Authorization: Bearer ${SUPABASE_KEY}")
+
+  COUNT=$(echo "$RESPONSE" | jq length)
 fi
-
-RESPONSE=$(curl -s \
-  "${SUPABASE_URL}/rest/v1/rsvps?${QUERY}" \
-  -H "apikey: ${SUPABASE_KEY}" \
-  -H "Authorization: Bearer ${SUPABASE_KEY}")
-
-COUNT=$(echo "$RESPONSE" | jq length)
 
 if [[ "$COUNT" -eq 0 ]]; then
   echo "No RSVPs found with filter: $FILTER"
@@ -75,9 +84,13 @@ SENT=0
 SKIPPED=0
 
 for i in $(seq 0 $((COUNT - 1))); do
-  NAME=$(echo "$RESPONSE" | jq -r ".[$i].name")
-  PHONE=$(echo "$RESPONSE" | jq -r ".[$i].phone")
+  NAME=$(echo "$RESPONSE" | jq -r ".[$i].name" | awk '{print $1}')
+  PHONE=$(echo "$RESPONSE" | jq -r ".[$i].phone" | tr -dc '0-9')
+  RSVP=$(echo "$RESPONSE" | jq -r ".[$i].rsvp // \"Yes\"")
   MESSAGE="${TEMPLATE//\{name\}/$NAME}"
+  if [[ "$RSVP" == "Maybe" ]]; then
+    MESSAGE="${MESSAGE//So excited to see you/Hope to see you}"
+  fi
 
   echo ""
   echo "[$((i + 1))/$COUNT] To: $NAME ($PHONE)"
