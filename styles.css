@@ -834,6 +834,40 @@ a {
   .loader-root-ir { stroke-dashoffset: 0; }
 }
 
+/* Footer */
+.site-footer {
+  max-width: 36rem;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  border-top: 3px solid var(--border);
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.site-footer p {
+  margin: 0.25rem 0;
+}
+
+.site-footer .heart {
+  color: var(--accent);
+}
+
+.site-footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--text-secondary);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-footer a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .site-header {
