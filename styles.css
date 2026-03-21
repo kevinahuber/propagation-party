@@ -843,8 +843,6 @@ a {
   text-align: center;
   font-size: 0.6875rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: var(--text-secondary);
 }
 
