@@ -6,3 +6,4 @@ Thumbs.db
 node_modules/
 dist/
 .superpowers/
+scripts/sms-message.txt
